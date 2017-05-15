@@ -9,7 +9,7 @@ module Spree
         # the logger error will help track down customer issues easier
         if attachment_is_file?
           if digital_link.authorize!
-            if Paperclip::Attachment.default_options[:storage] == :s3
+            if attachment.options[:storage] == :s3
               redirect_to attachment.expiring_url(Spree::DigitalConfiguration[:s3_expiration_seconds]) and return
             else
               send_file attachment.path, :filename => attachment.original_filename, :type => attachment.content_type and return
@@ -26,7 +26,7 @@ module Spree
     private
 
       def attachment_is_file?
-        if Paperclip::Attachment.default_options[:storage] == :s3
+        if attachment.options[:storage] == :s3
           attachment.exists?
         else
           File.file?(attachment.path)
